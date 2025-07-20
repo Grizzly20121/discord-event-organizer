@@ -1,18 +1,12 @@
 {
-  "name": "discordjs-starter",
+  "name": "discord-event-organizer",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.6.0",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.2"
+    "discord.js": "^14.0.0",
+    "luxon": "^3.0.0"
   }
 }
