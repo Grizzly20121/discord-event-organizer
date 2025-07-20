@@ -2,10 +2,11 @@ entrypoint = "dist/index.js"
 run = "npm run build && npm run start"
 
 [nix]
-channel = "stable-21_11"
+channel = "stable-23_05"
 
 [env]
 XDG_CONFIG_HOME = "/home/runner/.config"
+NODE_VERSION = "18.18.2"
 
 [packager]
 language = "nodejs"
@@ -51,7 +52,7 @@ support = true
     [debugger.interactive.launchMessage]
     command = "launch"
     type = "request"
-    
+
       [debugger.interactive.launchMessage.arguments]  
       args = []
       console = "externalTerminal"

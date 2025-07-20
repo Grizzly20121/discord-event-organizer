@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js"
   },
   "dependencies": {
-    "discord.js": "^14.0.0",
-    "luxon": "^3.0.0"
+    "discord.js": "^14.13.0",
+    "luxon": "^3.6.1"
   }
 }
