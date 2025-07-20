@@ -1,0 +1,2 @@
+echo ".env" >> .gitignore
+echo "config.json" >> .gitignore
