@@ -1,0 +1,2 @@
+pick d42dcec Resolve merge conflict in package.json
+pick 4d8215b Remove config.json from repo
