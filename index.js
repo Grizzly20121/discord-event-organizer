@@ -1,7 +1,7 @@
+require('dotenv').config();
 const { Client, GatewayIntentBits, Events, Collection, ChannelType, PermissionsBitField } = require('discord.js');
 const fs = require('fs');
 const { DateTime } = require('luxon');
-require('dotenv').config();
 const token = process.env.TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
