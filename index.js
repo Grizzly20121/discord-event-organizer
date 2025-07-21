@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits, Events, Collection, ChannelType, PermissionsBitField } = require('discord.js');
 const fs = require('fs');
 const { DateTime } = require('luxon');
-const { token } = require('./config.json');
+const token = process.env.DiscordToken;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
