@@ -26,13 +26,12 @@ client.on(Events.InteractionCreate, async interaction => {
   const { commandName, options, member } = interaction;
   const data = loadData();
 
+  const isAdmin = member.permissions.has(PermissionsBitField.Flags.Administrator);
+
   try {
     if (commandName === 'ping') {
       return interaction.reply({ content: '🏓 Pong!', ephemeral: true });
     }
-
-    // Only allow admins to run certain commands
-    const isAdmin = member.permissions.has(PermissionsBitField.Flags.Administrator);
 
     if (commandName === 'createevent') {
       if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can create events.', ephemeral: true });
@@ -53,7 +52,7 @@ client.on(Events.InteractionCreate, async interaction => {
       data.events.push({ name, date: dateInput, timezone, groups: [], regionMap: {} });
       saveData(data);
 
-      return interaction.reply(`✅ Event **${name}** created for **${dateInput}** in **${timezone}**.\nGroup times will be chosen later.`);
+      return interaction.reply(`✅ Event **${name}** created for **${dateInput}** in **${timezone}**.`);
     }
 
     else if (commandName === 'apply') {
@@ -107,6 +106,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
     else if (commandName === 'assigngroups') {
+      if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can assign groups.', ephemeral: true });
+
       const eventName = options.getString('event');
       const groupSize = options.getInteger('size');
       const event = data.events.find(e => e.name === eventName);
@@ -127,7 +128,6 @@ client.on(Events.InteractionCreate, async interaction => {
       }
 
       const finalGroups = [];
-
       for (const region of ['eu', 'us', 'aus']) {
         const shuffled = regions[region].sort(() => 0.5 - Math.random());
         for (let i = 0; i < shuffled.length; i += groupSize) {
@@ -150,6 +150,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
     else if (commandName === 'threadgroups') {
+      if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can create threads.', ephemeral: true });
+
       const eventName = options.getString('event');
       const event = data.events.find(e => e.name === eventName);
 
@@ -170,7 +172,7 @@ client.on(Events.InteractionCreate, async interaction => {
         for (const userId of group) {
           try {
             await thread.members.add(userId);
-          } catch (e) {
+          } catch {
             console.warn(`Could not add ${userId} to thread`);
           }
         }
@@ -180,6 +182,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
     else if (commandName === 'pinggroup') {
+      if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can ping groups.', ephemeral: true });
+
       const eventName = options.getString('event');
       const groupIndex = options.getInteger('group') - 1;
       const event = data.events.find(e => e.name === eventName);
@@ -226,6 +230,36 @@ client.on(Events.InteractionCreate, async interaction => {
       saveData(data);
 
       return interaction.reply(`🗑️ Event **${eventName}** deleted.`);
+    }
+
+    else if (commandName === 'removeplayer') {
+      if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can remove players.', ephemeral: true });
+
+      const eventName = options.getString('event');
+      const userId = options.getUser('user').id;
+
+      if (!data.applications[eventName] || !data.applications[eventName].includes(userId)) {
+        return interaction.reply({ content: '❌ This user is not signed up for the event.', ephemeral: true });
+      }
+
+      data.applications[eventName] = data.applications[eventName].filter(id => id !== userId);
+      delete data.events.find(e => e.name === eventName).regionMap[userId];
+      saveData(data);
+
+      return interaction.reply({ content: `🗑️ <@${userId}> has been removed from **${eventName}**.`, ephemeral: true });
+    }
+
+    else if (commandName === 'ungroup') {
+      if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can ungroup.', ephemeral: true });
+
+      const eventName = options.getString('event');
+      const event = data.events.find(e => e.name === eventName);
+      if (!event) return interaction.reply({ content: '❌ Event not found.', ephemeral: true });
+
+      event.groups = [];
+      saveData(data);
+
+      return interaction.reply(`🗑️ Groups removed for **${eventName}**.`);
     }
 
   } catch (error) {

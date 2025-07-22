@@ -1,5 +1,9 @@
 const { REST, Routes, SlashCommandBuilder } = require('discord.js');
-const { clientId, guildId, token } = require('./config.json');
+require('dotenv').config();
+
+const clientId = process.env.CLIENT_ID;
+const guildId = process.env.GUILD_ID;
+const token = process.env.TOKEN;
 
 const commands = [
   new SlashCommandBuilder()
@@ -68,6 +72,18 @@ const commands = [
     .setName('deleteevent')
     .setDescription('Delete an event')
     .addStringOption(opt => opt.setName('event').setDescription('Event name').setRequired(true)),
+
+  new SlashCommandBuilder()
+    .setName('removeplayer')
+    .setDescription('Remove a player from an event (admin only)')
+    .addStringOption(opt => opt.setName('event').setDescription('Event name').setRequired(true))
+    .addUserOption(opt => opt.setName('user').setDescription('User to remove').setRequired(true)),
+
+  new SlashCommandBuilder()
+    .setName('ungroup')
+    .setDescription('Remove all groups from an event (admin only)')
+    .addStringOption(opt => opt.setName('event').setDescription('Event name').setRequired(true)),
+
 ].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
