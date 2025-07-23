@@ -84,6 +84,20 @@ const commands = [
     .setDescription('Remove all groups from an event (admin only)')
     .addStringOption(opt => opt.setName('event').setDescription('Event name').setRequired(true)),
 
+  new SlashCommandBuilder()
+  .setName('addplayer')
+  .setDescription('Add a user to an event manually (admin only)')
+  .addStringOption(opt => opt.setName('event').setDescription('Event name').setRequired(true))
+  .addUserOption(opt => opt.setName('user').setDescription('User to add').setRequired(true))
+  .addStringOption(opt => opt.setName('region')
+    .setDescription('Region')
+    .setRequired(true)
+    .addChoices(
+      { name: 'EU', value: 'eu' },
+      { name: 'US', value: 'us' },
+      { name: 'Australia', value: 'aus' }
+    )),
+
 ].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);

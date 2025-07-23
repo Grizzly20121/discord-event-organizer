@@ -89,6 +89,28 @@ client.on(Events.InteractionCreate, async interaction => {
 
       return interaction.reply({ content: `🗑️ You have been removed from **${eventName}**.`, ephemeral: true });
     }
+      else if (commandName === 'addplayer') {
+        if (!isAdmin) return interaction.reply({ content: '🚫 Only admins can add players.', ephemeral: true });
+
+        const eventName = options.getString('event');
+        const user = options.getUser('user');
+        const region = options.getString('region');
+        const userId = user.id;
+
+        const event = data.events.find(e => e.name === eventName);
+        if (!event) return interaction.reply({ content: '❌ Event not found.', ephemeral: true });
+
+        if (!data.applications[eventName]) data.applications[eventName] = [];
+        if (data.applications[eventName].includes(userId)) {
+          return interaction.reply({ content: '⚠️ This user is already applied for this event.', ephemeral: true });
+        }
+
+        data.applications[eventName].push(userId);
+        event.regionMap[userId] = region;
+        saveData(data);
+
+        return interaction.reply({ content: `✅ <@${userId}> was added to **${eventName}** as **${region.toUpperCase()}**.`, ephemeral: true });
+      }
 
     else if (commandName === 'listapplicants') {
       const eventName = options.getString('event');
